@@ -21,7 +21,7 @@ function createMessage(num){
     for(var i = 0; i < remindStr.length - 1; i += 2){
         content += "- " + remindStr[i] + ": Lesson " + remindStr[i + 1]
         content += "<br/>"
-        console.log(content)
+        // console.log(content)
     }
     remind = remindStr[0].replace("-","") + "<br/>Hi " + teacherName +", I'm " +ptName+" - a " + position +" at Algorithmics. This message is for reminding you about filling in the CPR:<br/>" + content
     var mess_section = document.getElementById("message-section")
@@ -30,12 +30,12 @@ function createMessage(num){
     // alert(remind + "<br/>Thank you,<br/>" + ptName)
 }
 document.addEventListener("DOMContentLoaded", () => {
-    // console.log("Hello World!");
+    // // // console.log("Hello World!");
     fileSelector.addEventListener('change', (event) => {
         const fileList = event.target.files;
         reader.readAsText(fileList[0])
         reader.addEventListener('load', (e) => {
-            // console.log(e.target.result);
+            // // // console.log(e.target.result);
             const data = e.target.result;
             var parser = new DOMParser();
             
@@ -43,26 +43,26 @@ document.addEventListener("DOMContentLoaded", () => {
             var doc = parser.parseFromString(data, "text/html");
             var table = doc.getElementsByTagName('table')
             
-            console.log(table[0]);
+            // // console.log(table[0]);
             var rows = table[0].querySelectorAll("tr")
-            console.log(rows)
+            // // console.log(rows)
             var stopLoop = false
             rows.forEach(r => {
                 if(stopLoop)
                     return;
                 url = r.childNodes[4].innerText.match(/(https:[^\s]+)/)
                 const _class = r.childNodes[4].innerText.match(/(NVH[^\s]+)/g)
-                console.log(_class)
+                // // console.log(_class)
                 if(_class){
                     window.focus();
                     window.open(url, '_blank')
                     let status = prompt(_class + " - next lesson: " + r.childNodes[1].innerText + "- teacher: " + r.childNodes[10].innerText)
                     if(status != null || status.length > 0){
                         if(status != 0){
-                            console.log(status)
+                            // // console.log(status)
                             class_need_to_remind.push(_class + "," + status + "," + r.childNodes[10].innerText)
                             addClassNeedToRemind(_class + "," + status + "," + r.childNodes[10].innerText)
-                            console.log(_class + "," + status + "," + r.childNodes[10].innerText)
+                            // // console.log(_class + "," + status + "," + r.childNodes[10].innerText)
                         }
                         // status.replace(status.match(/\d[^\s]+/g),"")
                     }
@@ -70,13 +70,13 @@ document.addEventListener("DOMContentLoaded", () => {
                         stopLoop = true;
                 }
             })
-            // console.log(class_need_to_remind)
+            // // console.log(class_need_to_remind)
         });
     });
     
     function addClassNeedToRemind(_class){
         var body = document.getElementsByTagName('tbody');
-        console.log(body)
+        // console.log(body)
         const remindStr = _class.split(",")
         const teacherName = remindStr[remindStr.length - 1]
         const className = remindStr[0].substring(0, remindStr[0].length - 4)
@@ -109,7 +109,7 @@ document.addEventListener("DOMContentLoaded", () => {
     //     for(var i = 0; i < remindStr.length - 1; i += 2){
     //         content += "- " + remindStr[i] + ": Lesson " + remindStr[i + 1]
     //         content += "\n"
-    //         console.log(content)
+    //         // console.log(content)
     //     }
     //     remind = remindStr[0].replace("-","") + "\nHi " + teacherName +", I'm " +ptName+" - a " + position +" at Algorithmics. This message is for reminding you about filling in the CPR:\n" + content
     //     var mess_section = document.getElementById("message-section")
@@ -127,7 +127,7 @@ document.addEventListener("DOMContentLoaded", () => {
         });
         if(class_after24h.length > 0){
             var body = document.getElementById('remind-table');
-            console.log(body)
+            // console.log(body)
             class_after24h.forEach(c => {
                 const remindStr = c.split(",")
                 const teacherName = remindStr[1]
@@ -143,10 +143,10 @@ document.addEventListener("DOMContentLoaded", () => {
                 body.innerHTML += str;
             })
         }
-        // console.log(class_after24h);
+        // // console.log(class_after24h);
         mailSection.removeAttribute("hidden")
         // alert(1);
-        // console.log(mailbox)
+        // // console.log(mailbox)
     })
     // mailBtn.onclick = createMail(class_need_to_remind);
     // function createMail(classes){
