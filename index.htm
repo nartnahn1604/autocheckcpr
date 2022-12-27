@@ -1,0 +1,85 @@
+<head>
+    <style>
+        html{
+            font-size: 16px;
+        }
+        table, tr, td{
+            border: 1px solid black;
+            border-collapse: collapse;
+            padding: 5px 15px 5px 15px;
+        }
+        thead td {
+            background-color: #ff8585;
+            font-size: 18px;
+            font-weight: bold;
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+    <h1>WELCOME TO NICK's CPR CHECKING AUTO MESSAGE</h1>
+    <div>
+        <label for="name">Your name</label>
+        <input type="text" id="name" placeholder="Your english name">
+    </div>
+    <div>
+        <label for="position">Your position</label>
+        <input type="text" id="position" placeholder="Programming tutor?">
+    </div>
+    <h2>Open file</h2>
+    <input type="file" id="file-selector" multiple>
+    <button id="create-mail">Tạo mail</button>
+    <div style="margin-top: 20px;">
+        <table>
+            <thead>
+                <td>No.</td>
+                <td>Class</td>
+                <td>Teacher</td>
+                <td>Lesson</td>
+                <td>#</td>
+                <td>##</td>
+            </thead>
+            <tbody id="root">
+                <!-- <tr>
+                    <td>1</td>
+                    <td>NVH_VP18_MON_OFF</td>
+                    <td>Mr. Andrew</td>
+                    <td>10</td>
+                    <td>
+                        <input id="messageBtn" onclick="createMessage(0)" type="button" value="Create message">
+                    </td>
+                    <td>
+                        <input type="checkbox" value="Add to mail remind">
+                    </td>
+                </tr> -->
+            </tbody>
+        </table>
+    </div>
+    <br><br>
+    <div id="message-section" hidden>
+        <h1>Message</h1>
+    </div>
+    <br><br>
+    <div id="mail-section" hidden>
+        <h1>Mail creation</h1>
+        <div>
+            Dear Mr. Finn, 
+            Below is the list of the classes that the CPR hasn't been filled for more than 24 hours. 
+            <br/>Can you help me to remind these teachers. I am pleased to provide more information if you have any questions.
+        </div>
+        <br/>
+        <br/>
+        <table id="remindStr" style="text-align: center; border: 1px solid black;">
+            <thead>
+                <td>#</td>
+                <td>Class</td>
+                <td>Teacher</td>
+                <td>Lesson</td>
+            </thead>
+            <tbody id = "remind-table">
+                
+            </tbody>
+        </table>
+    </div>
+    <script src="./auto_generate_message.js"></script>
+</body> 
