@@ -40,9 +40,10 @@ document.addEventListener("DOMContentLoaded", () => {
                 if(_class){
                     window.open(url, '_blank')
                     let status;
-                    setTimeout(function(){
-                        status = prompt(_class + " - next lesson: " + r.childNodes[1].innerText + "- teacher: " + r.childNodes[10].innerText)
-                    }, 1000)
+                    window.focus();
+                    status = window.prompt(_class + " - next lesson: " + r.childNodes[1].innerText + "- teacher: " + r.childNodes[10].innerText)
+                    // setTimeout(function(){
+                    // }, 1000)
                     window.focus();
                     if(status != null || status.length > 0){
                         if(status != 0){
