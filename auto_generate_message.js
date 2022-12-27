@@ -39,12 +39,13 @@ document.addEventListener("DOMContentLoaded", () => {
                 const _class = r.childNodes[4].innerText.match(/(NVH[^\s]+)/g)
                 if(_class){
                     window.open(url, '_blank')
+                    
                     let status;
                     window.focus();
                     status = window.prompt(_class + " - next lesson: " + r.childNodes[1].innerText + "- teacher: " + r.childNodes[10].innerText)
                     // setTimeout(function(){
                     // }, 1000)
-                    window.focus();
+                    // window.focus();
                     if(status != null || status.length > 0){
                         if(status != 0){
                             class_need_to_remind.push(_class + "," + status + "," + r.childNodes[10].innerText)
