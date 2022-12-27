@@ -54,9 +54,9 @@ document.addEventListener("DOMContentLoaded", () => {
                 const _class = r.childNodes[4].innerText.match(/(NVH[^\s]+)/g)
                 // // console.log(_class)
                 if(_class){
-                    window.focus();
                     window.open(url, '_blank')
                     let status = prompt(_class + " - next lesson: " + r.childNodes[1].innerText + "- teacher: " + r.childNodes[10].innerText)
+                    window.focus();
                     if(status != null || status.length > 0){
                         if(status != 0){
                             // // console.log(status)
