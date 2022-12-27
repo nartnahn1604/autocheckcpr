@@ -72,8 +72,10 @@ document.addEventListener("DOMContentLoaded", () => {
                 '<td>'+ lesson + '</td>'+
                 '<td>'+
                 '    <input id="messageBtn" onclick="createMessage(' +body[0].children.length+ ')" type="button" value="Create message">'+
-                '    <input type="checkbox" value="false">'+
                 '</td>'+
+                '<td>'+
+                '    <input type="checkbox" value="false">'+
+                '</td>'
             '</tr>'
         body[0].innerHTML += str;
     }
