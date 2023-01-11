@@ -5,6 +5,7 @@ var mailSection = document.getElementById("mail-section");
 mailSection.hidden = true;
 var table;
 var count_class = 1;
+var campus = "";
 function createMessage(num){
     remindStr = class_need_to_remind[num].split(",")
     teacherName = remindStr[remindStr.length - 1]
@@ -21,35 +22,43 @@ function createMessage(num){
 }
 
 function generateForm(i){
-    return new Promise((res) => {
-        setTimeout(()=>{
-            var rows = table[0].querySelectorAll("tr")
-            r = rows[i];
-            // console.log(r);
-            url = r.childNodes[4].innerText.match(/(https:[^\s]+)/)
-            const _class = r.childNodes[4].innerText.match(/(NVH[^\s]+)/g)
-            if(_class){
-                window.open(url, '_blank')
-                var this_class = document.getElementsByName("class");
-                var this_lesson = document.getElementsByName("lesson");
-                var this_teacher = document.getElementsByName("teacher");
-                console.log(this_class)
-                this_class[0].value = _class;
-                this_lesson[0].value = r.childNodes[1].innerText;
-                this_teacher[0].value = r.childNodes[10].innerText;
-                // let status;
-                // window.focus();
-                // status = window.prompt(_class + " - next lesson: " + r.childNodes[1].innerText + "- teacher: " + r.childNodes[10].innerText)
-                // setTimeout(function(){
-                // }, 1000)
-                // window.focus();
-            }
-            res();
-        }, 300)
-    });
+    if(i == 1){
+        campus = document.getElementById("campus").value;
+    }
+    var rows = table[0].querySelectorAll("tr")
+    r = rows[i];
+    // console.log(r);
+    url = r.childNodes[4].innerText.match(/(https:[^\s]+)/)
+    var reg = "("+campus+"[^\\s]+)";
+    console.log(new RegExp(reg, "g"))
+    const _class = r.childNodes[4].innerText.match(new RegExp(reg, "g"))
+    if(_class){
+        window.open(url, '_blank')
+        var this_class = document.getElementsByName("class");
+        var this_lesson = document.getElementsByName("lesson");
+        var this_teacher = document.getElementsByName("teacher");
+        console.log(this_class)
+        this_class[0].value = _class;
+        this_lesson[0].value = r.childNodes[1].innerText;
+        this_teacher[0].value = r.childNodes[10].innerText;
+        // let status;
+        // window.focus();
+        // status = window.prompt(_class + " - next lesson: " + r.childNodes[1].innerText + "- teacher: " + r.childNodes[10].innerText)
+        // setTimeout(function(){
+        // }, 1000)
+        // window.focus();
+    }
+    else{
+        var this_class = document.getElementsByName("class");
+        this_class.value = "";
+        var this_lesson = document.getElementsByName("lesson");
+        this_lesson.value = "";
+        var this_teacher = document.getElementsByName("teacher");
+        this_teacher.value = "";
+    }
 }
 
-async function next_class(){
+function next_class(){
     var status = document.getElementsByName("remind");
     console.log(status[0])
     var rows = table[0].querySelectorAll("tr")
@@ -61,7 +70,7 @@ async function next_class(){
         status[0].value = "";
     }
     count_class++;
-    await generateForm(count_class);
+    generateForm(count_class);
     // console.log(count_class);
     
 }
