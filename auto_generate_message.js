@@ -25,9 +25,11 @@ function createMessage(num){
 function getClassList(){
     classByCampus = []
     count_class = 1
+    error = document.getElementById("error")
+    error.innerHTML = ""
     campus = document.getElementById("campus").value;
     if(campus == ""){
-        alert("Bạn phải nhập campus!")
+        error.innerHTML = "Bạn phải nhập tên campus!";
         return;
     }
     
