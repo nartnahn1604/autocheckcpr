@@ -24,7 +24,13 @@ function createMessage(num){
 
 function getClassList(){
     classByCampus = []
+    count_class = 1
     campus = document.getElementById("campus").value;
+    if(campus == ""){
+        alert("Bạn phải nhập campus!")
+        return;
+    }
+    
     var rows = table[0].querySelectorAll("tr")
     var reg = "("+campus+"[^\\s]+)";
     rows.forEach(r => {
