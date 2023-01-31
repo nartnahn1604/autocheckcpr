@@ -4,27 +4,57 @@ var class_need_to_remind = [];
 var mailSection = document.getElementById("mail-section");
 mailSection.hidden = true;
 var table;
-var count_class = 1;
+var count_class = 0;
 var campus = "";
 var classByCampus = []
+function calNextDay(){
+    const monthList = [31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31]
+    var date = new Date()
+    var day = date.getDate()
+    var month = date.getMonth()
+    var year = date.getFullYear()
+    if((year % 100 != 0 && year % 4 == 0) || year % 400 == 0)
+        monthList[1] = 29
+    if(day + 1 > monthList[month]){
+        day = 1
+        if(month + 1 > 11){
+            month = 1
+            year += 1
+        }
+        else
+            month += 1
+    }
+    else
+        day += 1
+    
+    if(day < 10)
+        day = "0" + day
+    if(month + 1 < 10)
+        month = "0" + (month + 1)
+    return day + "/" + month + "/" + year
+}
+
 function createMessage(num){
-    remindStr = class_need_to_remind[num].split(",")
-    teacherName = remindStr[remindStr.length - 1]
+    remindStr = class_need_to_remind[num]
+    teacherName = remindStr["teacherName"]
     const ptName = document.getElementById("name").value;
     const position = document.getElementById("position").value;
     content = ""
-    for(var i = 0; i < remindStr.length - 1; i += 2){
-        content += "- " + remindStr[i] + ": Lesson " + remindStr[i + 1]
+    for(var i = 0; i < remindStr["class"].length; i += 1){
+        content += "- " + remindStr["class"][i] + ": Lesson " + remindStr["lesson"][i]
         content += "<br/>"
     }
-    remind = remindStr[0].replace("-","") + "<br/>Hi " + teacherName +", I'm " +ptName+" - a " + position +" at Algorithmics. This message is for reminding you about filling in the CPR:<br/>" + content
+    remind = "Hi Mr./Ms. " + teacherName +", I'm " +ptName+" - a " + position + " from " + campus + " campus.  I found that you forgot to input CPR for these groups:<br/>" + content
     var mess_section = document.getElementById("message-section")
-    mess_section.innerHTML +="<br/><br/>" + remind + "<br/>Thank you,<br/>" + ptName
+    mess_section.innerHTML +="<br/><br/>" + remind + "<br/>" + 
+            "Could you please make it before tomorrow (" + calNextDay() +")?<br/>" +
+            "Thank you! Have a nice day!<br/>"+
+            "*Note: If there are any issues with the CPR link, please mention it in your group on Slack."
 }
 
 function getClassList(){
     classByCampus = []
-    count_class = 1
+    count_class = 0
     error = document.getElementById("error")
     error.innerHTML = ""
     campus = document.getElementById("campus").value;
@@ -39,7 +69,11 @@ function getClassList(){
         if(r.childNodes[4].innerText.match(new RegExp(reg, "g")))
             classByCampus.push(r);
     })
-    generateForm(1);
+    generateForm(0);
+    // rows.forEach(r => {
+    //     url = r.childNodes[4].innerText.match(/(https:[^\s]+)/)
+    //     console.log(r.childNodes[8].innerText + "\n-" + r.childNodes[4].innerText.match(new RegExp(reg, "g")) + "\n-" + url)
+    // })
 }
 
 function generateForm(i){
@@ -55,7 +89,12 @@ function generateForm(i){
         var this_lesson = document.getElementsByName("lesson");
         var this_teacher = document.getElementsByName("teacher");
         // console.log(_class)
-        _class[0] = _class[0].replace(_class[0].match("([0-1]?[0-9]|2[0-3]):[0-5][0-9]$")[0], "")
+        try{
+            _class[0] = _class[0].replace(_class[0].match("([0-1]?[0-9]|2[0-3]):[0-5][0-9]$")[0], "")
+        }
+        catch(e){
+
+        }
         this_class[0].value = _class[0];
         this_lesson[0].value = r.childNodes[1].innerText;
         this_teacher[0].value = r.childNodes[10].innerText;
@@ -82,23 +121,64 @@ function next_class(){
     var reg = "("+campus+"[^\\s]+)";
     // // console.log(new RegExp(reg, "g"))
     const _class = r.childNodes[4].innerText.match(new RegExp(reg, "g"))
-    _class[0] = _class[0].replace(_class[0].match("([0-1]?[0-9]|2[0-3]):[0-5][0-9]$")[0], "")
+    try{
+        _class[0] = _class[0].replace(_class[0].match("([0-1]?[0-9]|2[0-3]):[0-5][0-9]$")[0], "")
+    }
+    catch(e){
+
+    }
     if(status[0].value.length > 0){
-        class_need_to_remind.push(_class + "," + status[0].value + "," + r.childNodes[10].innerText)
-        addClassNeedToRemind(_class + "," + status[0].value + "," + r.childNodes[10].innerText)
+        var isNewTeacher = false
+        var i = 0
+        class_need_to_remind.forEach(c => {
+            if(c["teacherName"] == r.childNodes[10].innerText)
+            {
+                isNewTeacher = true
+                return;
+            }
+            i++;
+        })
+        if(!isNewTeacher)
+        {
+            var newClass = {
+                teacherName: r.childNodes[10].innerText,
+                class: [_class],
+                lesson: [status[0].value]
+            }
+            class_need_to_remind.push(newClass)
+            
+        } 
+        else{
+            class_need_to_remind[i]["class"].push(_class)
+            class_need_to_remind[i]["lesson"].push(status[0].value)
+        }
         status[0].value = "";
     }
+    console.log(class_need_to_remind)
     count_class++;
-    generateForm(count_class);
+    if(count_class < classByCampus.length)
+        generateForm(count_class);
+    else
+        class_need_to_remind.forEach(c => {
+            addClassNeedToRemind(c)
+        })
     // console.log(count_class);
     
 }
 function addClassNeedToRemind(_class){
     var body = document.getElementsByTagName('tbody');
-    const remindStr = _class.split(",")
-    const teacherName = remindStr[remindStr.length - 1]
-    const className = remindStr[0]
-    const lesson = remindStr[1]
+    // const remindStr = _class.split(",")
+    const teacherName = _class["teacherName"]
+    var className = ""
+    _class["class"].forEach(c => {
+        className += c + "<br/>"
+    })
+
+    var lesson = ""
+    _class["lesson"].forEach(l => {
+        lesson += l + "<br/>"
+    })
+    
     var str = '<tr>'+
             '<td>'+ (body[0].children.length + 1) +'</td>'+
             '<td>' + className + '</td>'+
@@ -131,18 +211,23 @@ document.addEventListener("DOMContentLoaded", () => {
         var mailbox = document.querySelectorAll('input[type="checkbox"]')
         // var count = 0;
         var class_after24h = []
+        var i = 0
         mailbox.forEach(b => {
             if(b.checked==true)
-                class_after24h.push(b.parentElement.parentElement.children[1].innerText+","+b.parentElement.parentElement.children[2].innerText+","+b.parentElement.parentElement.children[3].innerText)
+                class_after24h.push(class_need_to_remind[i])
+            i++
         });
         if(class_after24h.length > 0){
             var body = document.getElementById('remind-table');
             body.innerHTML = "";
             class_after24h.forEach(c => {
-                const remindStr = c.split(",")
-                const teacherName = remindStr[1]
-                const className = remindStr[0]
-                const lesson = remindStr[2]
+                const teacherName = c["teacherName"]
+                var className = ""
+                var lesson = ""
+                for(var i = 0; i < c["class"].length; i++){
+                    className += c["class"][i] + "<br/>"
+                    lesson += c["lesson"][i] + "<br/>"
+                }
                 var str = '<tr>'+
                         '<td>'+ (body.children.length + 1) +'</td>'+
                         '<td>' + className + '</td>'+
