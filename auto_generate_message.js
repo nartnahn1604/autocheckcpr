@@ -128,17 +128,20 @@ function next_class(){
 
     }
     if(status[0].value.length > 0){
-        var isNewTeacher = false
+        var isNewTeacher = true
         var i = 0
+        console.log(class_need_to_remind)
         class_need_to_remind.forEach(c => {
+            if(!isNewTeacher)
+                return;
             if(c["teacherName"] == r.childNodes[10].innerText)
             {
-                isNewTeacher = true
+                isNewTeacher = false;
                 return;
             }
             i++;
         })
-        if(!isNewTeacher)
+        if(isNewTeacher)
         {
             var newClass = {
                 teacherName: r.childNodes[10].innerText,
@@ -154,7 +157,7 @@ function next_class(){
         }
         status[0].value = "";
     }
-    console.log(class_need_to_remind)
+    // console.log(class_need_to_remind)
     count_class++;
     if(count_class < classByCampus.length)
         generateForm(count_class);
