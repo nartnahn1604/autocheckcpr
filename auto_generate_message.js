@@ -97,10 +97,10 @@ function generateForm(i){
         }
         this_class[0].value = _class[0];
         this_lesson[0].value = r.childNodes[1].innerText;
-        this_teacher[0].value = r.childNodes[10].innerText;
+        this_teacher[0].value = r.childNodes[9].innerText;
         // let status;
         // window.focus();
-        // status = window.prompt(_class + " - next lesson: " + r.childNodes[1].innerText + "- teacher: " + r.childNodes[10].innerText)
+        // status = window.prompt(_class + " - next lesson: " + r.childNodes[1].innerText + "- teacher: " + r.childNodes[9].innerText)
         // setTimeout(function(){
         // }, 1000)
         // window.focus();
@@ -131,7 +131,7 @@ function next_class(){
         var isNewTeacher = false
         var i = 0
         class_need_to_remind.forEach(c => {
-            if(c["teacherName"] == r.childNodes[10].innerText)
+            if(c["teacherName"] == r.childNodes[9].innerText)
             {
                 isNewTeacher = true
                 return;
@@ -141,7 +141,7 @@ function next_class(){
         if(!isNewTeacher)
         {
             var newClass = {
-                teacherName: r.childNodes[10].innerText,
+                teacherName: r.childNodes[9].innerText,
                 class: [_class],
                 lesson: [status[0].value]
             }
@@ -154,14 +154,20 @@ function next_class(){
         }
         status[0].value = "";
     }
-    console.log(class_need_to_remind)
     count_class++;
     if(count_class < classByCampus.length)
         generateForm(count_class);
-    else
+    else{
         class_need_to_remind.forEach(c => {
             addClassNeedToRemind(c)
         })
+        var this_class = document.getElementsByName("class");
+        this_class.value = "";
+        var this_lesson = document.getElementsByName("lesson");
+        this_lesson.value = "";
+        var this_teacher = document.getElementsByName("teacher");
+        this_teacher.value = "";
+    }
     // console.log(count_class);
     
 }
