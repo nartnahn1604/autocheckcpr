@@ -128,17 +128,18 @@ function next_class(){
 
     }
     if(status[0].value.length > 0){
-        var isNewTeacher = false
+        var isNewTeacher = true
         var i = 0
+        console.log(class_need_to_remind)
         class_need_to_remind.forEach(c => {
             if(c["teacherName"] == r.childNodes[9].innerText)
             {
-                isNewTeacher = true
+                isNewTeacher = false;
                 return;
             }
             i++;
         })
-        if(!isNewTeacher)
+        if(isNewTeacher)
         {
             var newClass = {
                 teacherName: r.childNodes[9].innerText,
